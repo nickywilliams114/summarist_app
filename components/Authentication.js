@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import PropTypes from "prop-types";
 import "./Authentication.css";
+import { useDispatch } from "react-redux";
+import { setUser } from "../redux/userSlice";
 
 const Authentication = ({
   onLogin,
@@ -14,6 +16,7 @@ const Authentication = ({
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
+  const dispatch = useDispatch();
 
   const handleLogin = async () => {
     try {
@@ -27,10 +30,30 @@ const Authentication = ({
     }
   };
 
-  const handleRegister = () => onRegister(email, password);
+  const handleRegister = async () => {
+    try {
+      setLoading(true);
+      const res = onRegister(email, password);
+      if (res && typeof res.then === "function") {
+        await res;
+      }
+    } finally {
+      setLoading(false);
+    }
+  };
   const handleGoogleLogin = () => onGoogleLogin();
   const handleGuestLogin = () => onGuestLogin();
-  const handleForgotPassword = () => onForgotPassword(email);
+  const handleForgotPassword = async () => {
+    try {
+      setLoading(true);
+      const res = onForgotPassword(email);
+      if (res && typeof res.then === "function") {
+        await res;
+      }
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <div className="auth-modal__wrapper">
@@ -52,7 +75,7 @@ const Authentication = ({
             <>
               <button
                 className="btn guest__btn--wrapper"
-                onClick={handleGuestLogin}
+                onClick={() => dispatch(handleGuestLogin)}
                 disabled={loading}
               >
                 <figure className="guest__icon--mask">
@@ -87,23 +110,27 @@ const Authentication = ({
               <div className="divider">
                 <span className="divider__text">or</span>
               </div>
+            </>
+          ) : null}
 
-              <input
-                type="email"
-                placeholder="Email Address"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                disabled={loading}
-              />
+          <input
+            type="email"
+            placeholder="Email Address"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            disabled={loading}
+          />
 
-              <input
-                type="password"
-                placeholder="Password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                disabled={loading}
-              />
+          <input
+            type="password"
+            placeholder="Password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            disabled={loading}
+          />
 
+          {isLogin ? (
+            <>
               <button
                 className="Login"
                 onClick={handleLogin}
@@ -115,18 +142,28 @@ const Authentication = ({
                   "Login"
                 )}
               </button>
-
-              <button
-                onClick={handleForgotPassword}
-                className="forgot-password-btn"
-                disabled={loading}
-              >
-                Forgot your password?
-              </button>
             </>
           ) : (
-            <button onClick={handleRegister} disabled={loading}>
-              Register
+            <button
+              className="Login"
+              onClick={handleRegister}
+              disabled={loading}
+            >
+              {loading ? (
+                <span className="spinner" aria-hidden="true"></span>
+              ) : (
+                "Register"
+              )}
+            </button>
+          )}
+
+          {isLogin && (
+            <button
+              onClick={handleForgotPassword}
+              className="forgot-password-btn"
+              disabled={loading}
+            >
+              Forgot your password?
             </button>
           )}
 

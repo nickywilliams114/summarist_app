@@ -5,12 +5,13 @@ import { getFirestore } from "firebase/firestore";
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
-  apiKey: "AIzaSyDxi1gNETHsRNjeJ55KmnY4HtOP3G5kB7k",
-  authDomain: "Yvirtualint2-3ca2c.firebaseapp.com",
-  projectId: "Yvirtualint2-3ca2c",
-  storageBucket: "Yvirtualint2-3ca2c.firebasestorage.app",
-  messagingSenderId: "1051798855662",
-  appId: "1:1:1051798855662:web:6ddbde2629d3bd0cdf38ff"
+  apiKey: "AIzaSyBlFNvraYNZNt_W3yBsxHTuwixdK5MG0QM",
+  authDomain: "my-summarist-app.firebaseapp.com",
+  projectId: "my-summarist-app",
+  storageBucket: "my-summarist-app.firebasestorage.app",
+  messagingSenderId: "789337096590",
+  appId: "1:789337096590:web:5ea504ded1fb9931ade4df",
+  measurementId: "G-30T6ETRJ3E",
 };
 
 // Initialize Firebase

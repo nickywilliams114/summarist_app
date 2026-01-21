@@ -13,6 +13,24 @@
   transition: all 300ms ease;
 }
 
+.sidebar__overlay {
+  position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: #3a4649;
+    transition: opacity .4s ease 0s;
+    z-index: 10;
+    opacity: .65;
+    pointer-events: auto;
+}
+
+.sidebar__overlay--hidden {
+  opacity: 0;
+  pointer-events: none;
+}
+
 .sidebar__logo {
   padding: 24px;
   padding-bottom: 40px;
@@ -36,7 +54,7 @@
   padding: 16px 24px;
   display: flex;
   align-items: center;
-  color: #032b41;
+  color: #6b757b;
   font-size: 16px;
   cursor: pointer;
   transition: all 200ms ease;
@@ -50,6 +68,11 @@
 
 .sidebar__link--active {
   background-color: #fff;
+  color: #032b41;
+}
+
+.sidebar__link--active .sidebar__link--icon {
+  color: #2bd97c;
 }
 
 .sidebar__link--line {

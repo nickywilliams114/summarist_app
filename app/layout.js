@@ -1,14 +1,11 @@
-import { Geist, Geist_Mono } from "next/font/google";
+import React from "react"; 
+import { Roboto_Serif } from "next/font/google";
 import "./globals.css";
+import "./style.css"
 import { Providers } from "./providers";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
+const robotoSerif = Roboto_Serif({
+  variable: "--font-roboto-serif",
   subsets: ["latin"],
 });
 
@@ -21,7 +18,7 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${robotoSerif.variable} antialiased`}
       >
         <Providers>{children}</Providers>
       </body>

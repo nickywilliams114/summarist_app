@@ -1,15 +1,47 @@
+"use client";
 import React from "react";
+import Link from "next/link";
+import { usePathname, useRouter } from "next/navigation";
+import { useDispatch, useSelector } from "react-redux";
+import { signOut } from "firebase/auth";
+import { auth } from "@/firebase";
+import { signOutUser } from "@/redux/userSlice";
 import "./Sidebar.css";
 
 const Sidebar = () => {
+  const dispatch = useDispatch();
+  const user = useSelector((state) => state.user.user);
+  const router = useRouter();
+  const pathname = usePathname();
+
+  const handleLogout = async () => {
+    try {
+      await signOut(auth);
+      dispatch(signOutUser());
+      router.push("/");
+    } catch (error) {
+      console.error(error);
+      alert(error.message);
+    }
+  };
+
   return (
     <div className="sidebar">
       <div className="sidebar__top">
         <div className="sidebar__logo">
-          <img src="/assets/logo.png" alt="logo" className="sidebar__logo--img" />
+          <img
+            src="/assets/logo.png"
+            alt="logo"
+            className="sidebar__logo--img"
+          />
         </div>
         <div className="sidebar__menu">
-          <a href="/for-you" className="sidebar__link--wrapper sidebar__link--active">
+          <Link
+            href="/for-you"
+            className={`sidebar__link--wrapper ${
+              pathname === "/for-you" ? "sidebar__link--active" : ""
+            }`}
+          >
             <div className="sidebar__link--line"></div>
             <div className="sidebar__link--icon">
               <svg
@@ -27,8 +59,13 @@ const Sidebar = () => {
               </svg>
             </div>
             <div className="sidebar__link--text">For you</div>
-          </a>
-          <a href="/library" className="sidebar__link--wrapper">
+          </Link>
+          <Link
+            href="/library"
+            className={`sidebar__link--wrapper ${
+              pathname === "/library" ? "sidebar__link--active" : ""
+            }`}
+          >
             <div className="sidebar__link--line"></div>
             <div className="sidebar__link--icon">
               <svg
@@ -46,8 +83,65 @@ const Sidebar = () => {
               </svg>
             </div>
             <div className="sidebar__link--text">My Library</div>
-          </a>
-          <a href="/settings" className="sidebar__link--wrapper">
+          </Link>
+          <Link
+            href="/highlights"
+            className={`sidebar__link--wrapper ${
+              pathname === "/highlights" ? "sidebar__link--active" : ""
+            }`}
+          >
+            <div className="sidebar__link--line"></div>
+            <div className="sidebar__link--icon">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                strokeWidth="1.5"
+                stroke="currentColor"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L6.832 19.82a4.5 4.5 0 01-1.897 1.13l-2.685.8.8-2.685a4.5 4.5 0 011.13-1.897L16.863 4.487zm0 0L19.5 7.125"
+                />
+              </svg>
+            </div>
+            <div className="sidebar__link--text">Highlights</div>
+          </Link>
+          <Link
+            href="/search"
+            className={`sidebar__link--wrapper ${
+              pathname === "/search" ? "sidebar__link--active" : ""
+            }`}
+          >
+            <div className="sidebar__link--line"></div>
+            <div className="sidebar__link--icon">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                strokeWidth="1.5"
+                stroke="currentColor"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z"
+                />
+              </svg>
+            </div>
+            <div className="sidebar__link--text">Search</div>
+          </Link>
+        </div>
+      </div>
+      <div className="sidebar__bottom">
+        <div className="sidebar__menu">
+          <Link
+            href="/settings"
+            className={`sidebar__link--wrapper ${
+              pathname === "/settings" ? "sidebar__link--active" : ""
+            }`}
+          >
             <div className="sidebar__link--line"></div>
             <div className="sidebar__link--icon">
               <svg
@@ -70,8 +164,13 @@ const Sidebar = () => {
               </svg>
             </div>
             <div className="sidebar__link--text">Settings</div>
-          </a>
-          <a href="/help" className="sidebar__link--wrapper">
+          </Link>
+          <Link
+            href="/help"
+            className={`sidebar__link--wrapper ${
+              pathname === "/help" ? "sidebar__link--active" : ""
+            }`}
+          >
             <div className="sidebar__link--line"></div>
             <div className="sidebar__link--icon">
               <svg
@@ -89,8 +188,8 @@ const Sidebar = () => {
               </svg>
             </div>
             <div className="sidebar__link--text">Help & Support</div>
-          </a>
-          <div className="sidebar__link--wrapper">
+          </Link>
+          <div className="sidebar__link--wrapper" onClick={handleLogout}>
             <div className="sidebar__link--line"></div>
             <div className="sidebar__link--icon">
               <svg
