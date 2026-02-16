@@ -7,6 +7,88 @@
   font-family: "Roboto", sans-serif;
 }
 
+body {
+  max-width: 100%;
+  overflow-x: hidden;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+ul {
+  list-style: none;
+}
+
+button {
+  cursor: pointer;
+  outline: none;
+  border: none;
+  background-color: transparent;
+}
+
+button:active {
+  transform: translateY(1px);
+}
+
+button:disabled {
+  cursor: not-allowed;
+  opacity: 0.65;
+}
+
+input {
+  outline: none;
+}
+
+.row {
+  max-width: 1070px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+.container {
+  padding: 40px 0;
+  width: 100%;
+}
+
+.wrapper {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  margin-left: 200px;
+  width: calc(100% - 200px);
+  transition: all 0.3s;
+}
+
+.wrapper__full {
+  margin-left: 0;
+  width: 100%;
+}
+
+.btn {
+  background-color: #2bd97c;
+  color: #032b41;
+  width: 100%;
+  height: 40px;
+  border-radius: 4px;
+  font-size: 16px;
+  transition: background-color 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 180px;
+}
+
+.btn:hover:not(:disabled) {
+  background-color: #20ba68;
+}
+
+.btn:active {
+  transform: translateY(1px);
+}
+
 /* Book Detail Page Styles */
 .wrapper__content {
   margin-left: 200px;
@@ -34,8 +116,21 @@
 .book__image--wrapper {
   width: 100%;
   border-radius: 8px;
-  overflow: hidden;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  position: relative;
+}
+
+.book__image--premium {
+  position: absolute;
+  top: -26px;
+  right: 1px;
+  background-color: #1a1a1a;
+  color: #fff;
+  padding: 2px 6px;
+  border-radius: 42px;
+  font-size: 8px;
+  font-weight: 400;
+  z-index: 999;
 }
 
 .book__image {
@@ -468,6 +563,7 @@ button:disabled {
 }
 
 .numbers__sub--title {
+  font-size: 14px;
   color: #394547;
   font-weight: 300;
 }
@@ -572,6 +668,10 @@ button:disabled {
 
   .landing__content__title {
     font-size: 24px;
+  }
+
+  .landing__content__subtitle {
+    font-size: 20px;
   }
 
   .features__wrapper {
@@ -1058,7 +1158,7 @@ button:disabled {
 .selected__book--icon svg {
   width: 100%;
   height: 100%;
-  background-color: #032b41;
+  background-color: #1a1a1a;
   color: #fff;
   display: flex;
   justify-content: center;
@@ -1111,7 +1211,6 @@ button:disabled {
 
 .for-you__recommended--books {
   display: flex;
-  overflow-x: auto;
   gap: 16px;
   padding-bottom: 24px;
   width: 100%;
@@ -1135,6 +1234,7 @@ button:disabled {
   display: flex;
   flex-direction: column;
   cursor: pointer;
+  position: relative; /* Added this line */
 }
 
 .for-you__recommended--books-link:hover {
@@ -1145,7 +1245,6 @@ button:disabled {
 .for-you__recommended--books-link .book__image--wrapper {
   margin-bottom: 8px;
   border-radius: 8px;
-  overflow: hidden;
 }
 
 .recommended__book--title {
@@ -1206,3 +1305,55 @@ button:disabled {
   color: #6b757b;
   font-weight: 500;
 }
+
+.inner__book--buttons {
+  display: flex;
+  gap: 16px; /* Space between Read and Listen buttons */
+  margin-bottom: 16px; /* Space between buttons group and "Add to My Library" */
+}
+
+.inner__book--read-btn {
+  background-color: #2bd97c; /* Example color for Read button */
+  color: #032b41;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 144px;
+  height: 48px;
+  font-size: 16px;
+  border-radius: 4px;
+  cursor: pointer;
+  gap: 8px;
+  transition: opacity .2s;
+}
+
+.inner__book--listen-btn {
+  background-color: #032b41; /* Example color for Listen button */
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 144px;
+  height: 48px;
+  font-size: 16px;
+  border-radius: 4px;
+  cursor: pointer;
+  gap: 8px;
+  transition: opacity .2s;
+}
+
+.inner__book--add-btn {
+  background-color: #3445d6; /* Example color for Listen button */
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 144px;
+  height: 48px;
+  font-size: 16px;
+  border-radius: 4px;
+  cursor: pointer;
+  gap: 8px;
+  transition: opacity .2s;
+}
+
