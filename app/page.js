@@ -82,6 +82,7 @@ export default function HomePage() {
               </div>
             </div>
           </section>
+
           <section id="features">
             <div className="container">
               <div className="row">
@@ -462,6 +463,14 @@ export default function HomePage() {
               </div>
             </div>
           </section>
+          <div className="reviews__btn--wrapper">
+            <button
+              className="btn home__cta--btn"
+              onClick={handleOpenAuthModal}
+            >
+              Login
+            </button>
+          </div>
           <section id="numbers">
             <div className="container">
               <div className="row">
@@ -623,6 +632,7 @@ export default function HomePage() {
           </section>
         </div>
       </div>
+
       {isAuthModalOpen && (
         <Authentication
           onClose={handleCloseAuthModal}
@@ -636,7 +646,7 @@ export default function HomePage() {
               const userCredential = await signInWithEmailAndPassword(
                 auth,
                 email,
-                password
+                password,
               );
               const user = userCredential.user;
               dispatch(setUser({ email: user.email, id: user.uid }));
@@ -652,7 +662,7 @@ export default function HomePage() {
               const userCredential = await createUserWithEmailAndPassword(
                 auth,
                 email,
-                password
+                password,
               );
               const user = userCredential.user;
               dispatch(setUser({ email: user.email, id: user.uid }));
@@ -677,7 +687,7 @@ export default function HomePage() {
               }
               console.error(error);
               alert(
-                "Login failed. Please update your firebase.js with your own project keys. The current keys are invalid for localhost."
+                "Login failed. Please update your firebase.js with your own project keys. The current keys are invalid for localhost.",
               );
             }
           }}
