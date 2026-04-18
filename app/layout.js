@@ -1,10 +1,10 @@
-import React from "react"; 
+import React from "react";
 import { Roboto_Serif } from "next/font/google";
 import "./globals.css";
-import "./style.css"
+import "./style.css";
 import { Providers } from "./providers";
 
-const robotoSerif = Roboto_Serif({
+const roboto_Serif = Roboto_Serif({
   variable: "--font-roboto-serif",
   subsets: ["latin"],
 });
@@ -17,9 +17,7 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
-      <body
-        className={`${robotoSerif.variable} antialiased`}
-      >
+      <body className={`${robotoSerif.variable} antialiased`}>
         <Providers>{children}</Providers>
       </body>
     </html>

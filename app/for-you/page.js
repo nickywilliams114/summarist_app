@@ -93,7 +93,7 @@ export default async function ForYouPage() {
                   >
                     <figure className="book__image--wrapper">
                       {book.subscriptionRequired && (
-                        <div className="book__image--premium">Premium</div>
+                      <div className="book__image--premium">Premium</div>
                       )}
                       <img
                         className="book__image"
