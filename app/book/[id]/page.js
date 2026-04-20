@@ -1,10 +1,35 @@
 import Sidebar from "@/components/Sidebar";
 import Search from "@/components/Search";
-import { fetchBook } from "@/lib/books";
+import { fetchBook, fetchRecommendedBooks } from "@/lib/books";
+
+import { notFound } from "next/navigation"; // Import notFound from Next.js
+
+export async function generateStaticParams() {
+  const recommendedBooks = await fetchRecommendedBooks();
+  const validParams = [];
+
+  for (const book of recommendedBooks) {
+    const fetchedBook = await fetchBook(book.id); // Call fetchBook
+    if (fetchedBook) {
+      // Only add if fetchBook returned a valid book
+      validParams.push({ id: book.id });
+    } else {
+      console.warn(
+        `Skipping prerendering for book ID ${book.id} as it could not be fetched.`,
+      );
+    }
+  }
+  return validParams;
+}
 
 export default async function BookPage({ params }) {
-  const { id } = await params;
+  const { id } = params;
   const book = await fetchBook(id);
+
+  if (!book) {
+    // Handle case where book is null
+    notFound(); // Display Next.js's default not found page
+  }
 
   return (
     <div className="wrapper">

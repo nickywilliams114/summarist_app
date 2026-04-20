@@ -17,7 +17,7 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
-      <body className={`${robotoSerif.variable} antialiased`}>
+      <body className={`${roboto_Serif.variable} antialiased`}>
         <Providers>{children}</Providers>
       </body>
     </html>
