@@ -75,7 +75,7 @@ const Authentication = ({
             <>
               <button
                 className="btn guest__btn--wrapper"
-                onClick={() => dispatch(handleGuestLogin)}
+                onClick={handleGuestLogin}
                 disabled={loading}
               >
                 <figure className="guest__icon--mask">

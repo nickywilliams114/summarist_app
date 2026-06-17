@@ -1,0 +1,52 @@
+.settings {
+  padding: 32px;
+}
+
+.settings__wrapper {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.settings__title {
+  font-size: 24px;
+  font-weight: 700;
+  margin-bottom: 32px;
+}
+
+.settings__content {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+}
+
+.settings__user,
+.settings__subscription {
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  padding: 24px;
+}
+
+.settings__user--email,
+.settings__subscription--plan {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.settings__user--email-label,
+.settings__subscription--title {
+  font-weight: 600;
+  margin-bottom: 16px;
+}
+
+.settings__login {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  margin-top: 64px;
+}
+
+.settings__login--text {
+  font-size: 16px;
+}

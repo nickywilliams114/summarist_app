@@ -1,0 +1,159 @@
+.choose-plan__body {
+  padding: 48px 0;
+  font-family: "Roboto", sans-serif;
+  color: #032b41;
+}
+
+.choose-plan__header {
+  display: flex;
+  justify-content: center;
+  gap: 80px;
+  padding-bottom: 48px;
+  border-bottom: 2px solid #e1e7ea;
+  margin-bottom: 48px;
+  text-align: center;
+}
+
+.header__feature--icon {
+  font-size: 36px;
+  margin-bottom: 16px;
+}
+
+.header__feature p {
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.choose-plan__wrapper {
+  max-width: 500px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.choose-plan__title {
+  font-size: 32px;
+  font-weight: 700;
+  margin-bottom: 32px;
+}
+
+.plan__card {
+  display: flex;
+  align-items: center;
+  padding: 24px;
+  border: 2px solid #e1e7ea;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+}
+
+.plan__card--active {
+  border-color: #2bd97c;
+}
+
+.plan__radio {
+  width: 20px;
+  height: 20px;
+  border: 2px solid #e1e7ea;
+  border-radius: 50%;
+  margin-right: 24px;
+  position: relative;
+}
+
+.plan__card--active .plan__radio {
+  border-color: #2bd97c;
+}
+
+.plan__card--active .plan__radio::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 10px;
+  height: 10px;
+  background-color: #2bd97c;
+  border-radius: 50%;
+}
+
+.plan__details {
+  text-align: left;
+}
+
+.plan__name {
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.plan__price {
+  font-size: 24px;
+  font-weight: 700;
+  margin: 4px 0;
+}
+
+.plan__trial {
+  font-size: 14px;
+  color: #6b757b;
+}
+
+.plan__separator {
+  margin: 24px 0;
+  color: #6b757b;
+}
+
+.plan__cta--btn {
+  width: 100%;
+  background-color: #2bd97c;
+  color: #032b41;
+  font-weight: 700;
+  border: none;
+  padding: 16px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 16px;
+  margin-top: 32px;
+  transition: background-color 0.2s ease-in-out;
+}
+
+.plan__cta--btn:hover {
+  background-color: #22c56b;
+}
+
+.plan__cta--footer {
+  font-size: 14px;
+  color: #6b757b;
+  margin-top: 16px;
+}
+
+.choose-plan__faq {
+  margin-top: 48px;
+  border-top: 2px solid #e1e7ea;
+  padding-top: 48px;
+}
+
+.choose-plan__faq--header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  cursor: pointer;
+}
+
+.choose-plan__faq--title {
+  font-size: 20px;
+  font-weight: 700;
+}
+
+.choose-plan__faq--icon {
+  font-size: 20px;
+  transition: transform 0.3s ease;
+}
+
+.faq__icon--open {
+  transform: rotate(180deg);
+}
+
+.choose-plan__faq--answer {
+  margin-top: 16px;
+  font-size: 16px;
+  line-height: 1.6;
+  color: #394547;
+}

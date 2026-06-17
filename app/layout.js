@@ -2,7 +2,7 @@ import React from "react";
 import { Roboto_Serif } from "next/font/google";
 import "./globals.css";
 import "./style.css";
-import { Providers } from "./providers";
+import { ClientProviders } from "./client-providers";
 
 const roboto_Serif = Roboto_Serif({
   variable: "--font-roboto-serif",
@@ -18,7 +18,7 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <body className={`${roboto_Serif.variable} antialiased`}>
-        <Providers>{children}</Providers>
+        <ClientProviders>{children}</ClientProviders>
       </body>
     </html>
   );

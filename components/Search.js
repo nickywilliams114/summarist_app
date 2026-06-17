@@ -1,6 +1,29 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 
 const Search = () => {
+  const [searchQuery, setSearchQuery] = useState("");
+  const [searchResults, setSearchResults] = useState([]);
+  const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    const debounce = setTimeout(() => {
+      if (searchQuery) {
+        fetchSearchResults();
+      }
+    }, 300);
+
+    return () => clearTimeout(debounce);
+  }, [searchQuery]);
+
+  async function fetchSearchResults() {
+    setLoading(true);
+    const response = await fetch(
+      `https://us-central1-summaristt.cloudfunctions.net/getBooksByAuthorOrTitle?search=${searchQuery}`,
+    );
+    const data = await response.json();
+    setSearchResults(data);
+    setLoading(false);
+  }
   return (
     <div className="search__background">
       <div className="search__wrapper">
@@ -10,6 +33,8 @@ const Search = () => {
               className="search__input"
               type="text"
               placeholder="Search for books"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
             />
             <div className="search__icon">
               <svg
@@ -27,6 +52,19 @@ const Search = () => {
               </svg>
             </div>
           </div>
+          {loading && <div className="search__loading">Loading...</div>}
+          {searchResults.length > 0 && (
+            <div className="search__results">
+              {searchResults.map((book) => (
+                <div key={book.id} className="search__result">
+                  <a href={`/book/${book.id}`}>
+                    <div className="search__result--title">{book.title}</div>
+                    <div className="search__result--author">{book.author}</div>
+                  </a>
+                </div>
+              ))}
+            </div>
+          )}
         </div>
       </div>
     </div>

@@ -107,6 +107,10 @@
   height: 100%;
 }
 
+.not-allowed {
+  cursor: not-allowed;
+}
+
 .sidebar__bottom {
   margin-bottom: 24px;
 }

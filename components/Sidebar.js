@@ -84,11 +84,8 @@ const Sidebar = () => {
             </div>
             <div className="sidebar__link--text">My Library</div>
           </Link>
-          <Link
-            href="/highlights"
-            className={`sidebar__link--wrapper ${
-              pathname === "/highlights" ? "sidebar__link--active" : ""
-            }`}
+          <div
+            className={`sidebar__link--wrapper not-allowed`}
           >
             <div className="sidebar__link--line"></div>
             <div className="sidebar__link--icon">
@@ -107,12 +104,9 @@ const Sidebar = () => {
               </svg>
             </div>
             <div className="sidebar__link--text">Highlights</div>
-          </Link>
-          <Link
-            href="/search"
-            className={`sidebar__link--wrapper ${
-              pathname === "/search" ? "sidebar__link--active" : ""
-            }`}
+          </div>
+          <div
+            className={`sidebar__link--wrapper not-allowed`}
           >
             <div className="sidebar__link--line"></div>
             <div className="sidebar__link--icon">
@@ -131,7 +125,7 @@ const Sidebar = () => {
               </svg>
             </div>
             <div className="sidebar__link--text">Search</div>
-          </Link>
+          </div>
         </div>
       </div>
       <div className="sidebar__bottom">
