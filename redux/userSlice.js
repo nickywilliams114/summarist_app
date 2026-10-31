@@ -2,6 +2,10 @@ import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
   user: null,
+  // "basic" | "premium" | "premium-plus"
+  plan: "basic",
+  // true until Firebase reports the initial auth state
+  authLoading: true,
   isAuthModalOpen: false,
 };
 
@@ -11,9 +15,15 @@ export const userSlice = createSlice({
   reducers: {
     setUser: (state, action) => {
       state.user = action.payload;
+      state.authLoading = false;
     },
     signOutUser: (state) => {
       state.user = null;
+      state.plan = "basic";
+      state.authLoading = false;
+    },
+    setPlan: (state, action) => {
+      state.plan = action.payload || "basic";
     },
     openAuthModal: (state) => {
       state.isAuthModalOpen = true;
@@ -24,6 +34,14 @@ export const userSlice = createSlice({
   },
 });
 
-export const { setUser, signOutUser, openAuthModal, closeAuthModal } =
-  userSlice.actions;
+export const {
+  setUser,
+  signOutUser,
+  setPlan,
+  openAuthModal,
+  closeAuthModal,
+} = userSlice.actions;
+
+export const selectIsSubscribed = (state) => state.user.plan !== "basic";
+
 export default userSlice.reducer;

@@ -1,49 +1,51 @@
 "use server";
 
 import { headers } from "next/headers";
-import { stripe } from "@/lib/stripe";
+import { getStripe } from "@/lib/stripe";
+import { PLANS } from "@/lib/plans";
 
-async function getProduct(productId) {
-  // Dummy data for now
-  if (productId === "price_1...monthly") {
-    return {
-      name: "Premium Monthly",
-      description: "Unlimited access to all books and audiobooks.",
-      priceInCents: 1499,
-    };
+export async function startCheckoutSession(planKey, customer) {
+  const plan = PLANS[planKey];
+  if (!plan) {
+    throw new Error(`Unknown plan: ${planKey}`);
   }
-  if (productId === "price_1...yearly") {
-    return {
-      name: "Premium Yearly",
-      description: "Unlimited access to all books and audiobooks.",
-      priceInCents: 9999,
-    };
-  }
-}
 
-export async function startCheckoutSession(productId) {
-  // Implement your product catalog lookup.
-  const product = await getProduct(productId);
+  const headerList = await headers();
+  const origin =
+    headerList.get("origin") || `http://${headerList.get("host")}`;
 
-  // Create Checkout Sessions from body params.
-  const session = await stripe.checkout.sessions.create({
+  const session = await getStripe().checkout.sessions.create({
     ui_mode: "embedded",
-    redirect_on_completion: "never",
+    mode: "subscription",
+    customer_email: customer.email,
+    client_reference_id: customer.uid,
+    metadata: { plan: plan.key, uid: customer.uid },
     line_items: [
       {
         price_data: {
           currency: "usd",
-          product_data: {
-            name: product.name,
-            description: product.description,
-          },
-          unit_amount: product.priceInCents,
+          product_data: { name: plan.name },
+          unit_amount: plan.priceInCents,
+          recurring: { interval: plan.interval },
         },
         quantity: 1,
       },
     ],
-    mode: "payment",
+    subscription_data: plan.trialDays
+      ? { trial_period_days: plan.trialDays }
+      : undefined,
+    return_url: `${origin}/choose-plan/success?session_id={CHECKOUT_SESSION_ID}`,
   });
 
   return session.client_secret;
+}
+
+// Looked up server-side so the client can't claim a plan it didn't pay for.
+export async function getCheckoutResult(sessionId) {
+  const session = await getStripe().checkout.sessions.retrieve(sessionId);
+  return {
+    complete: session.status === "complete",
+    plan: session.metadata?.plan,
+    uid: session.client_reference_id,
+  };
 }

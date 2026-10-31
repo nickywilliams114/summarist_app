@@ -1,100 +1,101 @@
 "use client";
 
-import React, { useState, useRef, useEffect } from "react";
-import { BsArrowLeftShort, BsArrowRightShort } from "react-icons/bs";
+import React, { useState, useRef } from "react";
+import { MdForward10, MdReplay10 } from "react-icons/md";
 import { FaPlay, FaPause } from "react-icons/fa";
+import { formatTime } from "@/lib/duration";
 
-const AudioPlayer = ({ audioLink }) => {
+const SKIP_SECONDS = 10;
+
+const AudioPlayer = ({ book, onEnded }) => {
   const [isPlaying, setIsPlaying] = useState(false);
   const [duration, setDuration] = useState(0);
   const [currentTime, setCurrentTime] = useState(0);
-
-  const audioPlayer = useRef();
-  const progressBar = useRef();
-  const animationRef = useRef();
-
-  useEffect(() => {
-    const seconds = Math.floor(audioPlayer.current.duration);
-    setDuration(seconds);
-    progressBar.current.max = seconds;
-  }, [audioPlayer?.current?.loadedmetadata, audioPlayer?.current?.readyState]);
-
-  const calculateTime = (secs) => {
-    const minutes = Math.floor(secs / 60);
-    const returnedMinutes = minutes < 10 ? `0${minutes}` : `${minutes}`;
-    const seconds = Math.floor(secs % 60);
-    const returnedSeconds = seconds < 10 ? `0${seconds}` : `${seconds}`;
-    return `${returnedMinutes}:${returnedSeconds}`;
-  };
+  const audioRef = useRef(null);
 
   const togglePlayPause = () => {
-    const prevValue = isPlaying;
-    setIsPlaying(!prevValue);
-    if (!prevValue) {
-      audioPlayer.current.play();
-      animationRef.current = requestAnimationFrame(whilePlaying);
+    const audio = audioRef.current;
+    if (audio.paused) {
+      audio.play();
     } else {
-      audioPlayer.current.pause();
-      cancelAnimationFrame(animationRef.current);
+      audio.pause();
     }
   };
 
-  const whilePlaying = () => {
-    progressBar.current.value = audioPlayer.current.currentTime;
-    changePlayerCurrentTime();
-    animationRef.current = requestAnimationFrame(whilePlaying);
+  const seekTo = (seconds) => {
+    const audio = audioRef.current;
+    audio.currentTime = Math.min(Math.max(seconds, 0), duration || 0);
+    setCurrentTime(audio.currentTime);
   };
 
-  const changeRange = () => {
-    audioPlayer.current.currentTime = progressBar.current.value;
-    changePlayerCurrentTime();
-  };
-
-  const changePlayerCurrentTime = () => {
-    progressBar.current.style.setProperty(
-      "--seek-before-width",
-      `${(progressBar.current.value / duration) * 100}%`,
-    );
-    setCurrentTime(progressBar.current.value);
-  };
-
-  const backThirty = () => {
-    progressBar.current.value = Number(progressBar.current.value) - 30;
-    changeRange();
-  };
-
-  const forwardThirty = () => {
-    progressBar.current.value = Number(progressBar.current.value) + 30;
-    changeRange();
-  };
+  const progress = duration ? (currentTime / duration) * 100 : 0;
 
   return (
-    <div className="audio-player">
-      <audio ref={audioPlayer} src={audioLink} preload="metadata"></audio>
-      <button className="forward-backward" onClick={backThirty}>
-        <BsArrowLeftShort /> 30
-      </button>
-      <button onClick={togglePlayPause} className="play-pause">
-        {isPlaying ? <FaPause /> : <FaPlay className="play" />}
-      </button>
-      <button className="forward-backward" onClick={forwardThirty}>
-        30 <BsArrowRightShort />
-      </button>
+    <div className="audio__wrapper">
+      <audio
+        ref={audioRef}
+        src={book.audioLink}
+        preload="metadata"
+        onLoadedMetadata={(e) => setDuration(e.currentTarget.duration)}
+        onTimeUpdate={(e) => setCurrentTime(e.currentTarget.currentTime)}
+        onPlay={() => setIsPlaying(true)}
+        onPause={() => setIsPlaying(false)}
+        onEnded={() => {
+          setIsPlaying(false);
+          onEnded?.();
+        }}
+      ></audio>
 
-      <div className="current-time">{calculateTime(currentTime)}</div>
-
-      <div>
-        <input
-          type="range"
-          className="progress-bar"
-          defaultValue="0"
-          ref={progressBar}
-          onChange={changeRange}
-        />
+      <div className="audio__track--wrapper">
+        <figure className="audio__track--image-mask">
+          <img src={book.imageLink} alt={book.title} />
+        </figure>
+        <div className="audio__track--details-wrapper">
+          <div className="audio__track--title">{book.title}</div>
+          <div className="audio__track--author">{book.author}</div>
+        </div>
       </div>
 
-      <div className="duration">
-        {duration && !isNaN(duration) && calculateTime(duration)}
+      <div className="audio__controls--wrapper">
+        <div className="audio__controls">
+          <button
+            className="audio__controls--btn"
+            onClick={() => seekTo(currentTime - SKIP_SECONDS)}
+            aria-label="Back 10 seconds"
+          >
+            <MdReplay10 />
+          </button>
+          <button
+            className="audio__controls--btn audio__controls--btn-play"
+            onClick={togglePlayPause}
+            aria-label={isPlaying ? "Pause" : "Play"}
+          >
+            {isPlaying ? <FaPause /> : <FaPlay className="audio__controls--play-icon" />}
+          </button>
+          <button
+            className="audio__controls--btn"
+            onClick={() => seekTo(currentTime + SKIP_SECONDS)}
+            aria-label="Forward 10 seconds"
+          >
+            <MdForward10 />
+          </button>
+        </div>
+      </div>
+
+      <div className="audio__progress--wrapper">
+        <div className="audio__time">{formatTime(currentTime)}</div>
+        <input
+          type="range"
+          className="audio__progress--bar"
+          min="0"
+          max={duration || 0}
+          step="0.1"
+          value={currentTime}
+          onChange={(e) => seekTo(Number(e.target.value))}
+          style={{ "--progress": `${progress}%` }}
+          aria-label="Seek"
+        />
+        <div className="audio__time">{formatTime(duration)}</div>
       </div>
     </div>
   );

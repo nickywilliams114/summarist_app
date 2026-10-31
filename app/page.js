@@ -1,34 +1,47 @@
 "use client";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useDispatch, useSelector } from "react-redux";
-import { setUser, openAuthModal, closeAuthModal } from "@/redux/userSlice";
-import {
-  signInWithPopup,
-  GoogleAuthProvider,
-  createUserWithEmailAndPassword,
-  signInWithEmailAndPassword,
-  sendPasswordResetEmail,
-} from "firebase/auth";
-import { auth } from "@/firebase";
+import { openAuthModal } from "@/redux/userSlice";
 import "./style.css";
-import Authentication from "@/components/Authentication";
 import { AiFillFileText, AiFillBulb, AiFillAudio } from "react-icons/ai";
 import { BsStarFill, BsStarHalf } from "react-icons/bs";
 import { BiCrown } from "react-icons/bi";
 import { RiLeafLine } from "react-icons/ri";
 
+const HEADING_COUNT = 6;
+
+// Highlights one statistics heading at a time, like the reference site.
+function useActiveHeading() {
+  const [active, setActive] = useState(0);
+  useEffect(() => {
+    const interval = setInterval(
+      () => setActive((index) => (index + 1) % HEADING_COUNT),
+      2000,
+    );
+    return () => clearInterval(interval);
+  }, []);
+  return active;
+}
+
 export default function HomePage() {
   const router = useRouter();
   const dispatch = useDispatch();
-  const isAuthModalOpen = useSelector((state) => state.user.isAuthModalOpen);
+  const user = useSelector((state) => state.user.user);
+  const activeHeading = useActiveHeading();
 
+  const headingClass = (index) =>
+    `statistics__heading ${
+      index === activeHeading ? "statistics__heading--active" : ""
+    }`;
+
+  // Logged-in visitors go straight into the app.
   const handleOpenAuthModal = () => {
-    dispatch(openAuthModal());
-  };
-
-  const handleCloseAuthModal = () => {
-    dispatch(closeAuthModal());
+    if (user) {
+      router.push("/for-you");
+    } else {
+      dispatch(openAuthModal());
+    }
   };
 
   return (
@@ -119,18 +132,18 @@ export default function HomePage() {
             </div>
             <div className="statistics__wrapper">
               <div className="statistics__content--header">
-                <div className="statistics__heading">
+                <div className={headingClass(0)}>
                   Enhance your knowledge
                 </div>
-                <div className="statistics__heading">
+                <div className={headingClass(1)}>
                   Achieve greater success
                 </div>
-                <div className="statistics__heading">Improve your health</div>
-                <div className="statistics__heading">
+                <div className={headingClass(2)}>Improve your health</div>
+                <div className={headingClass(3)}>
                   Develop better parenting skills
                 </div>
-                <div className="statistics__heading">Increase happiness</div>
-                <div className="statistics__heading">
+                <div className={headingClass(4)}>Increase happiness</div>
+                <div className={headingClass(5)}>
                   Be the best version of yourself!
                 </div>
               </div>
@@ -181,16 +194,16 @@ export default function HomePage() {
                 </div>
               </div>
               <div className="statistics__content--header statistics__content--header-second">
-                <div className="statistics__heading">Expand your learning</div>
-                <div className="statistics__heading">Accomplish your goals</div>
-                <div className="statistics__heading">
+                <div className={headingClass(0)}>Expand your learning</div>
+                <div className={headingClass(1)}>Accomplish your goals</div>
+                <div className={headingClass(2)}>
                   Strengthen your vitality
                 </div>
-                <div className="statistics__heading">
+                <div className={headingClass(3)}>
                   Become a better caregiver
                 </div>
-                <div className="statistics__heading">Improve your mood</div>
-                <div className="statistics__heading">
+                <div className={headingClass(4)}>Improve your mood</div>
+                <div className={headingClass(5)}>
                   Maximize your abilities
                 </div>
               </div>
@@ -391,76 +404,6 @@ export default function HomePage() {
         </div>
       </section>
 
-      {isAuthModalOpen && (
-        <Authentication
-          onClose={handleCloseAuthModal}
-          onGuestLogin={() => {
-            dispatch(setUser({ email: "guest@summarist.com", id: "guest" }));
-            handleCloseAuthModal();
-            router.push("/for-you");
-          }}
-          onLogin={async (email, password) => {
-            try {
-              const userCredential = await signInWithEmailAndPassword(
-                auth,
-                email,
-                password,
-              );
-              const user = userCredential.user;
-              dispatch(setUser({ email: user.email, id: user.uid }));
-              handleCloseAuthModal();
-              router.push("/for-you");
-            } catch (error) {
-              console.error(error);
-              alert(error.message);
-            }
-          }}
-          onRegister={async (email, password) => {
-            try {
-              const userCredential = await createUserWithEmailAndPassword(
-                auth,
-                email,
-                password,
-              );
-              const user = userCredential.user;
-              dispatch(setUser({ email: user.email, id: user.uid }));
-              handleCloseAuthModal();
-              router.push("/for-you");
-            } catch (error) {
-              console.error(error);
-              alert(error.message);
-            }
-          }}
-          onGoogleLogin={async () => {
-            try {
-              const provider = new GoogleAuthProvider();
-              const result = await signInWithPopup(auth, provider);
-              const user = result.user;
-              dispatch(setUser({ email: user.email, id: user.uid }));
-              handleCloseAuthModal();
-              router.push("/for-you");
-            } catch (error) {
-              if (error.code === "auth/popup-closed-by-user") {
-                return;
-              }
-              console.error(error);
-              alert(
-                "Login failed. Please update your firebase.js with your own project keys. The current keys are invalid for localhost.",
-              );
-            }
-          }}
-          onForgotPassword={async (email) => {
-            try {
-              await sendPasswordResetEmail(auth, email);
-              alert("Password reset email sent!");
-              handleCloseAuthModal();
-            } catch (error) {
-              console.error(error);
-              alert(error.message);
-            }
-          }}
-        />
-      )}
     </>
   );
 }
