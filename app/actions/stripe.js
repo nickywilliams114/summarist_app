@@ -15,7 +15,7 @@ export async function startCheckoutSession(planKey, customer) {
     headerList.get("origin") || `http://${headerList.get("host")}`;
 
   const session = await getStripe().checkout.sessions.create({
-    ui_mode: "embedded",
+    ui_mode: "embedded_page",
     mode: "subscription",
     customer_email: customer.email,
     client_reference_id: customer.uid,
